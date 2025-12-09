@@ -31,18 +31,18 @@ Overall render.com is great to create projects and deploy. We have to keep in mi
 ```
 # Database info
 ## Class Diagram
-[Class Diagrama lucid chart link](https://lucid.app/lucidchart/312df9b3-ee00-47b2-adf6-d349ac8c9b9b/edit?viewport_loc=-152%2C33%2C2674%2C1336%2C0_0&invitationId=inv_171d3cc6-46ce-40d5-b74a-ef61c904353a)
-
-![image](https://github.com/VictorDuartCalamot/ease_backend/assets/115024032/f07e787f-cb1f-4eb4-80b6-b4b54f28e6c1)
-
+<img width="1860" height="1360" alt="Diagrama de clases" src="https://github.com/user-attachments/assets/6b03d5cb-7405-46dd-a5c3-6c86496bc25c" />
 
 
 ## ER Diagram
-[ER Diagram lucid chart link](https://lucid.app/lucidchart/c99734df-2ad2-4e88-abec-458289e6d9c6/edit?viewport_loc=-45%2C3%2C2164%2C1081%2C0_0&invitationId=inv_457726de-bf5b-4beb-9ab1-a806997d89c8)
 
-![image](https://github.com/VictorDuartCalamot/ease_backend/assets/115024032/0c518a78-f276-4c52-8dc4-b9864ead309a)
+<img width="2320" height="1340" alt="Diagrama entidad relacion" src="https://github.com/user-attachments/assets/0ce53eb9-5f93-4691-8faf-df8d6ee05c2f" />
+
 ### Tables
 #### Users
+```
+Note: Due to security not being a concern, password was stored as a string. For security purposes it would be needed a salt key to create a hash to store it on password-hash(replacing password field) with its salt-key field.
+```
 ```
   //This table stores users
 
@@ -157,20 +157,20 @@ id: PK
     title: varchar(100) //Title of the income
     description: varchar(100) //Description of the income
     amount: numeric(10,2) // Amount of the income
-    category_id: uuid //Category of the income
+    subcategory_id: uuid //Subcategory of the income
     user_id: int //User that owns the income record
     creation_date: date //Creation date of the income
     creation_time: time //Cration time of the income 
 
 Table relations:
   Income N---N:1---1 User
-  Income N---N:1---1 Category  
+  Income N---N:1---1 Subcategory  
 
 Constraints:
   id: PK
 
 Foreign keys:
-  category_id -- Category
+  subcategory_id -- Category
   user_id -- User
 ```
 #### Expense
@@ -182,7 +182,6 @@ Foreign keys:
     title: varchar(100) //Title of the expense
     description: varchar(100) //Description of the expense
     amount: numeric(10,2) //Amount of the expense
-    category_id: uuid //Category of the expense
     subcategory_id: uuid //Subcategory of the expense
     user_id: int //User that owns the expense record
     creation_date: date //Creation date of the expense
@@ -190,14 +189,12 @@ Foreign keys:
 
 Table relations:
   Expense N---N:1---1 User
-  Expense N---N:1---1 Category
   Expense N---N:1---1 Subcategory
 
 Constraints:
   id: PK
 
 Foreign keys:
-  category_id -- Category
   subcategory_id -- Subcategory
   user_id -- User
 ```
@@ -213,8 +210,6 @@ Foreign keys:
     hexColor: varchar(7) //HTML color of the category
 
 Table relations:
-  Category 1---N:1---N Income
-  Category 1---N:1---N Expense
   Category 1---N:1---N Subcategory
 
 Constraints:
@@ -232,6 +227,7 @@ Constraints:
     category_id: uuid //Main category
 
   Table relations;
+    Subcategory 1--N:1--N Income
     Subcategory 1--N:1--N Expense    
     Subcategory N--N:1--1 Category
 
@@ -277,7 +273,7 @@ Admin (Same actions as user plus the following ones)
   -Delete users
   -Fetch chats where they belong
   -Delete chats where they belong
-SuperAdmin (Same actions as user plus admin plus the following ones)
+SuperAdmin (Same actions as admin plus the following ones)
   -Create users with any role permission leveL
   -Update users with any role permission level
   -Delete users with any role permission level  
@@ -432,7 +428,6 @@ management/expense/<uuid:pk>/
       -amount
       -creation_date
       -creation_time
-      -category
       -subcategory
     Required Header:
       -Authorization: Token <token>
@@ -461,7 +456,7 @@ management/income/
       -amount
       -creation_date
       -creation_time
-      -category      
+      -subcategory      
     Required Header:
       -Authorization: Token <token>
       -Content-Type: application/json
@@ -482,7 +477,7 @@ management/income/<uuid:pk>/
       -amount
       -creation_date
       -creation_time
-      -category      
+      -subcategory      
     Required Header:
       -Authorization: Token <token>
       -Content-Type: application/json
